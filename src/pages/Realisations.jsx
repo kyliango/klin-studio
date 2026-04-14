@@ -85,9 +85,11 @@ export default function Realisations() {
 
       <section className="py-8 pb-24">
         <div className="max-w-4xl mx-auto px-4 sm:px-6">
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
+          <div className="flex sm:grid sm:grid-cols-3 gap-5 overflow-x-auto sm:overflow-visible snap-x snap-mandatory scrollbar-hide -mx-4 sm:mx-0 px-4 sm:px-0 pb-4 sm:pb-0">
             {videos.map((src, i) => (
-              <VideoCard key={src} src={src} index={i} />
+              <div key={src} className="snap-center flex-shrink-0 w-[70vw] sm:w-auto">
+                <VideoCard src={src} index={i} />
+              </div>
             ))}
           </div>
 

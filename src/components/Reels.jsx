@@ -86,11 +86,12 @@ export default function Reels() {
           </div>
         </motion.div>
 
-        {/* Phones — décalage vertical alterné */}
-        <div className="flex items-center justify-center gap-6 sm:gap-8">
+        {/* Phones — scroll horizontal sur mobile, centré sur desktop */}
+        <div className="flex items-center sm:justify-center gap-5 sm:gap-8 overflow-x-auto sm:overflow-visible px-4 sm:px-0 pb-4 sm:pb-0 snap-x snap-mandatory scrollbar-hide -mx-4 sm:mx-0">
           {videos.map((src, i) => (
             <div
               key={src}
+              className="snap-center"
               style={{ marginTop: i === 1 ? 40 : 0 }}
             >
               <PhoneCard src={src} index={i} sectionInView={inView} />

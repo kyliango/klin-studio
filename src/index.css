@@ -63,6 +63,14 @@
     border-color: rgba(30, 144, 255, 0.4);
     box-shadow: 0 0 20px rgba(30, 144, 255, 0.1);
   }
+  /* Masquer la scrollbar horizontale sur mobile */
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
   /* Phone notch */
   .phone-notch::before {
     content: '';
