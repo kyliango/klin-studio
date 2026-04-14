@@ -1,0 +1,34 @@
+# Dépendances
+node_modules/
+
+# Build Vite
+dist/
+dist-ssr/
+
+# Environnement
+.env
+.env.local
+.env.*.local
+
+# Logs
+*.log
+npm-debug.log*
+
+# Éditeurs
+.DS_Store
+.vscode/
+.idea/
+
+# Fichiers Claude
+.claude/
+
+# Dossier médias original (on utilise public/medias/)
+médias/
+
+# Anciens fichiers HTML/CSS/JS statiques (remplacés par React)
+styles.css
+script.js
+
+# Cache
+.cache/
+*.tsbuildinfo
