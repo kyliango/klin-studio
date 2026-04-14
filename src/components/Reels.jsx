@@ -1,5 +1,5 @@
-import { useRef, useState } from 'react'
-import { motion, useInView, AnimatePresence } from 'framer-motion'
+import { useRef, useEffect } from 'react'
+import { motion, useInView } from 'framer-motion'
 
 const videos = [
   '/medias/29eec905-eea7-4edb-ae4e-562d5f088fe4.mp4',
@@ -7,41 +7,39 @@ const videos = [
   '/medias/97827086-e824-48a3-b7d8-ae03538376c0.mp4',
 ]
 
-function PhoneCard({ src, index, inView }) {
-  const videoRef  = useRef(null)
-  const [playing, setPlaying] = useState(false)
+function PhoneCard({ src, index, sectionInView }) {
+  const videoRef = useRef(null)
+  const cardRef  = useRef(null)
+  const isVisible = useInView(cardRef, { amount: 0.5 })
 
-  const handleHoverStart = () => {
-    videoRef.current?.play()
-    setPlaying(true)
-  }
-  const handleHoverEnd = () => {
-    if (videoRef.current) {
-      videoRef.current.pause()
-      videoRef.current.currentTime = 0
+  // Autoplay quand visible, pause quand hors écran
+  useEffect(() => {
+    const video = videoRef.current
+    if (!video) return
+
+    if (isVisible) {
+      video.play().catch(() => {})
+    } else {
+      video.pause()
     }
-    setPlaying(false)
-  }
+  }, [isVisible])
 
   return (
     <motion.div
+      ref={cardRef}
       initial={{ opacity: 0, y: 50, scale: 0.93 }}
-      animate={inView ? { opacity: 1, y: 0, scale: 1 } : {}}
+      animate={sectionInView ? { opacity: 1, y: 0, scale: 1 } : {}}
       transition={{ duration: 0.7, delay: index * 0.13, ease: [0.22, 1, 0.36, 1] }}
-      onHoverStart={handleHoverStart}
-      onHoverEnd={handleHoverEnd}
-      className="relative flex-shrink-0 cursor-pointer"
+      className="relative flex-shrink-0"
       style={{ width: 200, aspectRatio: '9/16' }}
     >
       <div
         className="relative w-full h-full rounded-[28px] overflow-hidden border-2 transition-all duration-400"
         style={{
-          borderColor: playing ? 'rgba(30,144,255,0.6)' : 'rgba(255,255,255,0.08)',
-          boxShadow: playing
-            ? '0 0 40px rgba(30,144,255,0.2), 0 30px 60px rgba(0,0,0,0.7)'
+          borderColor: isVisible ? 'rgba(30,144,255,0.4)' : 'rgba(255,255,255,0.08)',
+          boxShadow: isVisible
+            ? '0 0 40px rgba(30,144,255,0.15), 0 30px 60px rgba(0,0,0,0.7)'
             : '0 20px 60px rgba(0,0,0,0.6)',
-          transform: playing ? 'scale(1.04)' : 'scale(1)',
-          transition: 'transform 0.35s ease, border-color 0.3s, box-shadow 0.3s',
         }}
       >
         {/* Notch */}
@@ -53,41 +51,12 @@ function PhoneCard({ src, index, inView }) {
           muted
           loop
           playsInline
-          preload="none"
+          autoPlay
+          preload="metadata"
           className="w-full h-full object-cover"
         />
 
-        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/20" />
-
-        {/* Play icon */}
-        <AnimatePresence>
-          {!playing && (
-            <motion.div
-              initial={{ opacity: 0, scale: 0.85 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.7 }}
-              className="absolute inset-0 flex items-center justify-center"
-            >
-              <div className="w-13 h-13 w-12 h-12 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 flex items-center justify-center">
-                <svg className="w-5 h-5 text-white ml-0.5" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M8 5v14l11-7z"/>
-                </svg>
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
-
-        {/* Blue progress bar on play */}
-        <AnimatePresence>
-          {playing && (
-            <motion.div
-              initial={{ scaleX: 0 }}
-              animate={{ scaleX: 1 }}
-              exit={{ scaleX: 0 }}
-              className="absolute top-0 left-0 right-0 h-0.5 bg-blue z-10 origin-left"
-            />
-          )}
-        </AnimatePresence>
+        <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-black/20 pointer-events-none" />
       </div>
     </motion.div>
   )
@@ -115,9 +84,6 @@ export default function Reels() {
               <span className="text-gradient-blue">vous le voyez.</span>
             </h2>
           </div>
-          <p className="text-white/35 text-sm max-w-xs leading-relaxed sm:text-right">
-            Passez la souris sur une vidéo pour la lancer.
-          </p>
         </motion.div>
 
         {/* Phones — décalage vertical alterné */}
@@ -127,7 +93,7 @@ export default function Reels() {
               key={src}
               style={{ marginTop: i === 1 ? 40 : 0 }}
             >
-              <PhoneCard src={src} index={i} inView={inView} />
+              <PhoneCard src={src} index={i} sectionInView={inView} />
             </div>
           ))}
         </div>
