@@ -22,12 +22,6 @@ npm-debug.log*
 # Fichiers Claude
 .claude/
 
-# Médias — trop lourds pour GitHub, à déployer séparément
-médias/
-public/medias/*.mp4
-public/medias/*.MP4
-public/medias/*.PNG
-public/medias/*.png
 
 # Anciens fichiers HTML/CSS/JS statiques (remplacés par React)
 styles.css
@@ -36,3 +30,4 @@ script.js
 # Cache
 .cache/
 *.tsbuildinfo
+.vercel
